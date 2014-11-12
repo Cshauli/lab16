@@ -9,7 +9,7 @@
 from Tkinter import *
 root = Tk()
 drawpad = Canvas(root, width=800,height=600, background='white')
-rocket1 = drawpad.create_rectangle(400,585,405,590)
+rocket1 = drawpad.create_rectangle(400,585,405,590, fill='red')
 player = drawpad.create_oval(390,580,410,600, fill="blue")
 enemy = drawpad.create_rectangle(50,50,100,60, fill="red")
 rocket1Fired = False
@@ -46,10 +46,11 @@ class myApp(object):
         global drawpad
         global enemy
         global direction
-        global rocket
+        global rocket1
         global rocket1Fired
         x1,y1,x2,y2 = drawpad.coords(enemy)
         px1,py1,px2,py2 = drawpad.coords(player)
+        rx1,ry1,rx2,ry2 = drawpad.coords(rocket1)
 
         if x2 > 800:
             direction = - 5
@@ -57,13 +58,26 @@ class myApp(object):
             direction = 5
         drawpad.move(enemy, direction, 0)
         drawpad.after(5,self.animate)
+        if ry1 < 0 and ry2 < 0:
+            drawpad.move(rocket1,player) 
+        if rocket1Fired == True:
+            drawpad.move(rocket1,0,-5)
 
     def key(self,event):
         global player
         global rocket1Fired
         if event.char == "w":
-            drawpad.move(player,0,-4)
-            drawpad.move(rocket1,0,-4)
+            drawpad.move(player,0,-5)
+            drawpad.move(rocket1,0,-10)
+        if event.char == ' ':
+            rocket1Fired = True
+            
+        elif event.char == 's':
+            drawpad.move(player,0,5)
+        elif event.char == 'a':
+            drawpad.move(player,-5,0)
+        elif event.char == 'd':
+            drawpad.move(player,5,0)
             
     
     def collisionDetect(self, rocket):
